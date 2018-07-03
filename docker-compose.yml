@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  test:
+    image: composer:latest
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: php vendor/codeception/codeception/codecept run

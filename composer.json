@@ -1,0 +1,25 @@
+{
+    "name": "sete/evphp",
+    "description": "PHP like Verilog",
+    "keywords": [
+        "php",
+        "verilog"
+    ],
+    "require-dev": {
+        "codeception/codeception": "^2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "evphp\\": "src"
+        }
+    },
+    "license": "BSD-3-Clause",
+    "authors": [{
+        "name": "Sergei Terehov",
+        "email": "isergeiterehov@gmail.com"
+    }],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.0"
+    }
+}
