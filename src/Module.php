@@ -3,6 +3,11 @@
 namespace evphp;
 
 
+/**
+ * Module - main logic block
+ *
+ * @package evphp
+ */
 abstract class Module implements \ArrayAccess
 {
     /**
@@ -22,7 +27,7 @@ abstract class Module implements \ArrayAccess
     }
 
     /**
-     * Инициализирует вход
+     * Register inputs by names
      *
      * @param string ...$names
      * @return $this
@@ -37,7 +42,7 @@ abstract class Module implements \ArrayAccess
     }
 
     /**
-     * Инициализирует выход
+     * Register outputs by names
      *
      * @param string ...$names
      * @return $this
@@ -52,7 +57,7 @@ abstract class Module implements \ArrayAccess
     }
 
     /**
-     * Выполняет преобразование имен входов в объекты IO
+     * Inputs to IO objects transform
      *
      * @param string[] $names
      * @return IO[]
@@ -65,7 +70,7 @@ abstract class Module implements \ArrayAccess
     }
 
     /**
-     * При любом изменении сигнала
+     * On any changes
      *
      * @param string ...$names
      * @return Listener
@@ -76,7 +81,7 @@ abstract class Module implements \ArrayAccess
     }
 
     /**
-     * При переходе в условно-истинное состояние
+     * On like true changes
      *
      * @param string ...$names
      * @return Listener
@@ -87,7 +92,7 @@ abstract class Module implements \ArrayAccess
     }
 
     /**
-     * При переходе в условно-ложное состояние
+     * On like false changes
      *
      * @param string ...$names
      * @return Listener
@@ -98,7 +103,7 @@ abstract class Module implements \ArrayAccess
     }
 
     /**
-     * Устанавливает значение выхода
+     * Link input IO by name
      *
      * @param mixed $offset
      * @param mixed $value
@@ -107,14 +112,14 @@ abstract class Module implements \ArrayAccess
     public function offsetSet($offset, $value)
     {
         if (! isset($this->inputs[$offset])) {
-            throw new \Exception("Вход '{$offset}' не найден");
+            throw new \Exception("Input '{$offset}' not found");
         }
 
         $this->inputs[$offset]->link($value);
     }
 
     /**
-     * Возвращает значение входа
+     * Return output IO by name
      *
      * @param mixed $offset
      * @return mixed
@@ -123,14 +128,14 @@ abstract class Module implements \ArrayAccess
     public function offsetGet($offset)
     {
         if (! isset($this->outputs[$offset])) {
-            throw new \Exception("Выход '{$offset}' не найден");
+            throw new \Exception("Output '{$offset}' not found");
         }
 
         return $this->outputs[$offset];
     }
 
     /**
-     * Связывание входа
+     * Set output state by name
      *
      * @param $name
      * @param $value
@@ -142,19 +147,23 @@ abstract class Module implements \ArrayAccess
     }
 
     /**
-     * Возвращает выход
+     * Return input state by name
      *
      * @param $name
      * @return mixed
      */
     public function __get($name)
     {
-        return $this->inputs[$name]->get();
+        return ($this->inputs[$name] ?? $this->outputs[$name])->get();
     }
 
+    /**
+     * @param mixed $offset
+     * @throws \Exception
+     */
     public function offsetUnset($offset)
     {
-        throw new \Exception("Не доступно");
+        throw new \Exception("Not available");
     }
 
     public function offsetExists($offset)

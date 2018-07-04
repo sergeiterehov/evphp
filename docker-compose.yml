@@ -6,4 +6,4 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
-    command: php vendor/codeception/codeception/codecept run
+    command: php vendor/codeception/codeception/codecept run --debug

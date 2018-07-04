@@ -3,6 +3,11 @@
 namespace evphp;
 
 
+/**
+ * IO State listener
+ *
+ * @package evphp
+ */
 class Listener
 {
     /**
@@ -24,6 +29,12 @@ class Listener
         }
     }
 
+    /**
+     * Function on any defined change
+     *
+     * @param callable $function
+     * @return $this
+     */
     public function do(callable $function)
     {
         $this->function = $function;
@@ -31,6 +42,12 @@ class Listener
         return $this;
     }
 
+    /**
+     * Register change
+     *
+     * @param IO $io
+     * @param int $edge
+     */
     public function trigger(IO $io, int $edge)
     {
         if (null !== $this->edgeSense && $edge !== $this->edgeSense) {

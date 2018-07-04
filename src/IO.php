@@ -2,7 +2,14 @@
 
 namespace evphp;
 
+use evphp\helpers\Scalar;
 
+
+/**
+ * Input-output signal
+ *
+ * @package evphp
+ */
 class IO
 {
     const EDGE_POSITIVE = 1;
@@ -42,26 +49,32 @@ class IO
         return $this;
     }
 
+    /**
+     * Return current state
+     *
+     * @return mixed
+     */
     public function get()
     {
         return $this->value;
     }
 
     /**
+     * Set new state
+     *
      * @param $value
      * @return $this
      * @throws \Exception
      */
     public function set($value)
     {
-        if (! is_scalar($value) && ! is_null($value)) {
-            throw new \Exception("Значение сигнала должно быть скалярным");
-        }
+        self::testAvailableValue($value);
 
-        if ($this->value !== $value) {
-            $edge = !! $this->value && ! $value ? self::EDGE_NEGATIVE :
-                ! $this->value && !! $value ? self::EDGE_POSITIVE :
-                    self::EDGE_CONTINUED;
+        $valueCurrent = self::convertValueToScalar($this->value);
+        $valueNew = self::convertValueToScalar($value);
+
+        if ($valueCurrent !== $valueNew) {
+            $edge = $this->edgeDetect($value);
 
             $this->value = $value;
 
@@ -75,6 +88,13 @@ class IO
         return $this;
     }
 
+    /**
+     * Link current (as target) with source IO object
+     *
+     * @param self $source
+     * @return $this
+     * @throws
+     */
     public function link(self $source)
     {
         if ($this->dependency) {
@@ -97,5 +117,52 @@ class IO
         foreach ($this->refs as $ref) {
             $ref->set($this->value);
         }
+    }
+
+    /**
+     * Convert value to scalar for comparing
+     *
+     * @param $value
+     * @return bool|Scalar|float|int|null|string
+     * @throws \Exception
+     */
+    private static function convertValueToScalar($value)
+    {
+        if (is_scalar($value) || is_null($value)) {
+            return $value;
+        }
+
+        if ($value instanceof Scalar) {
+            return $value->ioScalarPresentationValue();
+        }
+
+        throw new \Exception("Value is not available");
+    }
+
+    /**
+     * Test value for using as scalar.
+     * If not available, throw exception.
+     *
+     * @param $value
+     * @throws \Exception
+     */
+    public static function testAvailableValue($value)
+    {
+        if (! is_scalar($value) && ! is_null($value) && ! $value instanceof Scalar) {
+            throw new \Exception("Value must be scalar or instance of Scalar");
+        }
+    }
+
+    /**
+     * Detect edge type for new value
+     *
+     * @param $value
+     * @return int
+     */
+    private function edgeDetect($value) : int
+    {
+        return !! $this->value && ! $value ? self::EDGE_NEGATIVE :
+            ! $this->value && !! $value ? self::EDGE_POSITIVE :
+                self::EDGE_CONTINUED;
     }
 }
