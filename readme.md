@@ -1,4 +1,4 @@
-# Пример модуля
+# Module example
 
 ```php
 use evphp\Module;
@@ -23,7 +23,7 @@ class Hello extends Module
 }
 ```
 
-использование
+using
 
 ```php
 use evphp\IO;
@@ -39,20 +39,20 @@ $name->set('Alex');
 echo $message->get(), "\n";
 ```
 
-# Изолированный тест
+# Isolated test
 
 ```bash
 docker build -t evphp_test .
 docker run --rm evphp_test
 ```
 
-# Отладочное тестирование
+# Debug testing
 
 ```bash
 docker-compose run --rm test composet install
 ```
 
-запуск
+run test
 
 ```bash
 docker-compose up
