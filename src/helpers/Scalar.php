@@ -7,6 +7,7 @@ namespace evphp\helpers;
  * Not scalar to scalar converter
  *
  * @package evphp\interfaces
+ * @todo: How to realize auto reflection?
  */
 interface Scalar
 {
